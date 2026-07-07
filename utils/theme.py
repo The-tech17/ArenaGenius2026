@@ -35,6 +35,16 @@ def get_theme_css(theme_mode):
             --muted: #64748b;
             --radius: 10px;
             --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+            --ops-surface: #0f172a;
+            --ops-surface-soft: #111c36;
+            --ops-surface-strong: #071024;
+            --ops-text: #f8fafc;
+            --ops-muted: #94a3b8;
+            --ops-subtle: rgba(148, 163, 184, 0.14);
+            --ops-inset: rgba(2, 6, 23, 0.34);
+            --ops-strip: rgba(15, 23, 42, 0.82);
+            --ops-map-bg: #050a18;
+            --ops-hero-cell: linear-gradient(145deg, rgba(15, 21, 53, 0.96), rgba(4, 8, 21, 0.98));
         }
         """
     elif theme_mode == "Light Mode":
@@ -55,6 +65,16 @@ def get_theme_css(theme_mode):
             --muted: #64748b;
             --radius: 10px;
             --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+            --ops-surface: #ffffff;
+            --ops-surface-soft: #f4f8fb;
+            --ops-surface-strong: #eaf2f7;
+            --ops-text: #0f172a;
+            --ops-muted: #52657a;
+            --ops-subtle: rgba(15, 23, 42, 0.12);
+            --ops-inset: rgba(15, 82, 186, 0.05);
+            --ops-strip: #f8fafc;
+            --ops-map-bg: #f7fbfd;
+            --ops-hero-cell: linear-gradient(145deg, #ffffff, #eef6f7);
         }
         """
     else:  # System Default (FIFA Dark Navy Theme)
@@ -75,6 +95,16 @@ def get_theme_css(theme_mode):
             --muted: #94a3b8;
             --radius: 10px;
             --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+            --ops-surface: #0f1535;
+            --ops-surface-soft: #121b3f;
+            --ops-surface-strong: #070d24;
+            --ops-text: #f8fafc;
+            --ops-muted: #94a3b8;
+            --ops-subtle: rgba(148, 163, 184, 0.14);
+            --ops-inset: rgba(2, 6, 23, 0.34);
+            --ops-strip: rgba(15, 23, 42, 0.82);
+            --ops-map-bg: #050a18;
+            --ops-hero-cell: linear-gradient(145deg, rgba(15, 21, 53, 0.96), rgba(4, 8, 21, 0.98));
         }
         @media (prefers-color-scheme: light) {
             :root {
@@ -93,6 +123,16 @@ def get_theme_css(theme_mode):
                 --muted: #64748b;
                 --radius: 10px;
                 --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+                --ops-surface: #ffffff;
+                --ops-surface-soft: #f4f8fb;
+                --ops-surface-strong: #eaf2f7;
+                --ops-text: #0f172a;
+                --ops-muted: #52657a;
+                --ops-subtle: rgba(15, 23, 42, 0.12);
+                --ops-inset: rgba(15, 82, 186, 0.05);
+                --ops-strip: #f8fafc;
+                --ops-map-bg: #f7fbfd;
+                --ops-hero-cell: linear-gradient(145deg, #ffffff, #eef6f7);
             }
         }
         """
@@ -238,9 +278,7 @@ def get_theme_css(theme_mode):
 
     .mission-main,
     .mission-grid > div {{
-        background:
-            linear-gradient(145deg, rgba(15, 21, 53, 0.96), rgba(4, 8, 21, 0.98)),
-            var(--card-bg);
+        background: var(--ops-hero-cell), var(--ops-surface);
     }}
 
     .mission-main {{
@@ -269,7 +307,7 @@ def get_theme_css(theme_mode):
     }}
 
     .mission-venue {{
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 1rem;
         font-weight: 600;
     }}
@@ -279,10 +317,10 @@ def get_theme_css(theme_mode):
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        border-top: 1px solid rgba(148, 163, 184, 0.16);
+        border-top: 1px solid var(--ops-subtle);
         padding-top: 1rem;
         margin-top: 1rem;
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 0.78rem;
         text-transform: uppercase;
         letter-spacing: 0.04em;
@@ -327,7 +365,7 @@ def get_theme_css(theme_mode):
     .health-row span,
     .dispatch-row span,
     .queue-row span {{
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 0.78rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -335,7 +373,7 @@ def get_theme_css(theme_mode):
     }}
 
     .mission-grid strong {{
-        color: var(--text);
+        color: var(--ops-text);
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1.45rem;
         line-height: 1.05;
@@ -355,12 +393,12 @@ def get_theme_css(theme_mode):
 
     .live-strip > div {{
         min-height: 48px;
-        background: rgba(15, 23, 42, 0.78);
+        background: var(--ops-strip);
         display: flex;
         align-items: center;
         gap: 0.45rem;
         padding: 0.65rem 0.85rem;
-        color: var(--text);
+        color: var(--ops-text);
     }}
 
     .live-strip strong {{
@@ -368,7 +406,7 @@ def get_theme_css(theme_mode):
     }}
 
     .live-strip span:not(.status-dot) {{
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 0.78rem;
         margin-left: auto;
     }}
@@ -400,7 +438,7 @@ def get_theme_css(theme_mode):
     .ops-widget,
     .ai-copilot,
     .activity-feed {{
-        background: linear-gradient(180deg, rgba(15, 21, 53, 0.98), rgba(8, 13, 32, 0.98));
+        background: linear-gradient(180deg, var(--ops-surface), var(--ops-surface-soft));
         border: 1px solid var(--card-border);
         border-radius: var(--radius);
         box-shadow: var(--shadow);
@@ -435,7 +473,7 @@ def get_theme_css(theme_mode):
     }}
 
     .kpi-value {{
-        color: var(--text);
+        color: var(--ops-text);
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 2.45rem;
         font-weight: 800;
@@ -497,7 +535,7 @@ def get_theme_css(theme_mode):
     }}
 
     .widget-live {{
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 0.72rem;
         font-weight: 800;
         text-transform: uppercase;
@@ -528,9 +566,9 @@ def get_theme_css(theme_mode):
         border: 1px solid rgba(148, 163, 184, 0.18);
         border-radius: 8px;
         background:
-            linear-gradient(90deg, rgba(6, 182, 212, 0.07) 1px, transparent 1px),
-            linear-gradient(rgba(6, 182, 212, 0.07) 1px, transparent 1px),
-            #050a18;
+            linear-gradient(90deg, rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+            linear-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+            var(--ops-map-bg);
         background-size: 28px 28px;
         overflow: hidden;
     }}
@@ -554,7 +592,7 @@ def get_theme_css(theme_mode):
         border-radius: 6px;
         display: grid;
         place-items: center;
-        color: rgba(248, 250, 252, 0.62);
+        color: var(--ops-muted);
         font-size: 0.72rem;
         font-weight: 800;
         letter-spacing: 0.12em;
@@ -636,7 +674,7 @@ def get_theme_css(theme_mode):
         flex-wrap: wrap;
         gap: 0.55rem 0.8rem;
         margin-top: 0.8rem;
-        color: var(--muted);
+        color: var(--ops-muted);
         font-size: 0.76rem;
         font-weight: 700;
     }}
@@ -690,7 +728,7 @@ def get_theme_css(theme_mode):
     .queue-row strong,
     .dispatch-row strong,
     .health-row strong {{
-        color: var(--text);
+        color: var(--ops-text);
         font-size: 0.9rem;
     }}
 
@@ -715,8 +753,8 @@ def get_theme_css(theme_mode):
     .weather-impact div,
     .ai-grid-mini div,
     .recommendation-panel div {{
-        border: 1px solid rgba(148, 163, 184, 0.14);
-        background: rgba(2, 6, 23, 0.32);
+        border: 1px solid var(--ops-subtle);
+        background: var(--ops-inset);
         border-radius: 8px;
         padding: 0.75rem;
     }}
@@ -725,7 +763,7 @@ def get_theme_css(theme_mode):
     .ai-grid-mini strong,
     .recommendation-panel strong {{
         display: block;
-        color: var(--text);
+        color: var(--ops-text);
         margin-top: 0.35rem;
         font-size: 0.95rem;
     }}
@@ -734,7 +772,7 @@ def get_theme_css(theme_mode):
     .widget-note {{
         margin-top: 0.85rem;
         padding-top: 0.8rem;
-        border-top: 1px solid rgba(148, 163, 184, 0.12);
+        border-top: 1px solid var(--ops-subtle);
         line-height: 1.45;
     }}
 
@@ -744,7 +782,7 @@ def get_theme_css(theme_mode):
     }}
 
     .risk-pill {{
-        color: var(--muted);
+        color: var(--ops-muted);
         border: 1px solid rgba(16, 185, 129, 0.32);
         border-radius: 999px;
         padding: 0.45rem 0.7rem;
@@ -766,7 +804,7 @@ def get_theme_css(theme_mode):
 
     .ai-content h4 {{
         margin: 0 0 0.65rem 0 !important;
-        color: var(--text) !important;
+        color: var(--ops-text) !important;
         font-size: 1rem !important;
         letter-spacing: 0 !important;
     }}
@@ -774,7 +812,7 @@ def get_theme_css(theme_mode):
     .ai-content ul {{
         margin: 0;
         padding-left: 1.05rem;
-        color: var(--text);
+        color: var(--ops-text);
         line-height: 1.7;
         font-size: 0.92rem;
     }}
@@ -785,13 +823,13 @@ def get_theme_css(theme_mode):
         gap: 0.6rem;
         margin-top: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(148, 163, 184, 0.12);
+        border-top: 1px solid var(--ops-subtle);
     }}
 
     .suggested-actions button {{
         border: 1px solid rgba(16, 185, 129, 0.34);
         background: rgba(16, 185, 129, 0.12);
-        color: var(--text);
+        color: var(--ops-text);
         border-radius: 8px;
         padding: 0.55rem 0.75rem;
         font-weight: 800;
@@ -1004,7 +1042,7 @@ def get_theme_css(theme_mode):
     }}
 
     .header-ops-grid div {{
-        background: rgba(2, 6, 23, 0.34);
+        background: var(--ops-inset);
         padding: 0.75rem;
     }}
 
@@ -1024,6 +1062,95 @@ def get_theme_css(theme_mode):
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1.12rem;
         line-height: 1.05;
+    }}
+
+    /* Mode-safe operation surfaces. Keep these late so they win over Streamlit theme flips. */
+    .mission-main,
+    .mission-grid > div,
+    .kpi-card,
+    .ops-widget,
+    .ai-copilot,
+    .activity-feed {{
+        color: var(--ops-text) !important;
+    }}
+
+    .mission-main *,
+    .mission-grid > div *,
+    .kpi-card *,
+    .ops-widget *,
+    .ai-copilot *,
+    .activity-feed * {{
+        text-shadow: none !important;
+    }}
+
+    .kpi-value,
+    .mission-grid strong,
+    .widget-title-row h3,
+    .ai-header h3,
+    .activity-feed h3,
+    .timeline-row span,
+    .activity-row span,
+    .queue-row strong,
+    .dispatch-row strong,
+    .health-row strong,
+    .recommendation-panel strong,
+    .weather-impact strong,
+    .ai-grid-mini strong {{
+        color: var(--ops-text) !important;
+    }}
+
+    .mission-grid span,
+    .kpi-head,
+    .kpi-mid,
+    .kpi-foot,
+    .widget-footer,
+    .widget-note,
+    .map-legend,
+    .recommendation-panel span,
+    .weather-impact span,
+    .ai-grid-mini span,
+    .health-row span,
+    .dispatch-row span,
+    .queue-row span {{
+        color: var(--ops-muted) !important;
+    }}
+
+    div[data-testid="metric-container"] {{
+        background: var(--ops-surface) !important;
+        border: 1px solid var(--card-border) !important;
+        color: var(--ops-text) !important;
+    }}
+
+    div[data-testid="metric-container"] label,
+    div[data-testid="metric-container"] [data-testid="stMetricLabel"],
+    div[data-testid="metric-container"] [data-testid="stMetricValue"],
+    div[data-testid="metric-container"] [data-testid="stMetricDelta"],
+    div[data-testid="metric-container"] p,
+    div[data-testid="metric-container"] span {{
+        color: var(--ops-text) !important;
+        opacity: 1 !important;
+    }}
+
+    div[data-testid="stMetricLabel"] {{
+        color: var(--ops-muted) !important;
+    }}
+
+    div[data-testid="stMetricValue"] {{
+        color: var(--ops-text) !important;
+    }}
+
+    div[data-testid="stMetricDelta"] {{
+        filter: none !important;
+    }}
+
+    [data-testid="stVegaLiteChart"],
+    [data-testid="stArrowVegaLiteChart"],
+    [data-testid="stPlotlyChart"],
+    [data-testid="stDataFrame"] {{
+        background: var(--card-bg) !important;
+        border-radius: var(--radius) !important;
+        border: 1px solid var(--card-border) !important;
+        padding: 0.35rem !important;
     }}
 
     @media (max-width: 1100px) {{
