@@ -4,6 +4,7 @@ import google.generativeai as genai
 import random
 import time
 from utils.data_simulator import get_stadium_details, initialize_simulation_state
+from utils.theme import clean_html
 
 def calculate_priority_score(crowd_size_val, severity_val, location_val, time_val):
     """
@@ -300,16 +301,16 @@ def render_incident_hub(api_key):
             p_score, p_label, p_badge = calculate_priority_score(crowd_size, severity, location_val, time_phase)
             
             st.markdown(
-                f"""
-                <div style="background-color: rgba(30, 41, 59, 0.5); padding: 0.75rem 1rem; border-radius: 8px; margin: 15px 0; border: 1px solid var(--card-border);">
+                clean_html(f"""
+                <div style="background-color: var(--card-bg); padding: 0.75rem 1rem; border-radius: 8px; margin: 15px 0; border: 1px solid var(--card-border);">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:600; font-size:0.95rem;">📊 Calculated Risk Score:</span>
+                        <span style="font-weight:600; font-size:0.95rem; color: var(--text) !important;">📊 Calculated Risk Score:</span>
                         <div>
                             <span class="badge {p_badge}" style="font-size:0.85rem;">{p_label} ({p_score}%)</span>
                         </div>
                     </div>
                 </div>
-                """,
+                """),
                 unsafe_allow_html=True
             )
             

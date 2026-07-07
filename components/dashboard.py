@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 from utils.data_simulator import initialize_simulation_state, run_simulation_tick
+from utils.theme import clean_html
 
 def render_dashboard():
     """
@@ -174,11 +175,11 @@ def render_dashboard():
         
         # Display simulated telemetry log feed
         logs_html = "".join([
-            f"<div style='font-size:0.85rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text); font-family: monospace;'>{log}</div>"
+            f"<div style='font-size:0.85rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: #38bdf8; font-family: monospace;'>{log}</div>"
             for log in st.session_state.telemetry_feed
         ])
         st.markdown(
-            f"""
+            clean_html(f"""
             <div style="
                 background-color: #020617; 
                 border: 1px solid var(--card-border); 
@@ -189,7 +190,7 @@ def render_dashboard():
             ">
                 {logs_html}
             </div>
-            """,
+            """),
             unsafe_allow_html=True
         )
         
