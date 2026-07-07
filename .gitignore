@@ -1,5 +1,12 @@
 .env
 __pycache__/
 *.pyc
-venv/
+.venv/
 .streamlit/secrets.toml
+streamlit.out.log
+streamlit.err.log
+venv/
+ENV/
+*.out
+*.err
+.streamlit/
