@@ -1,4 +1,5 @@
 import streamlit as st
+import textwrap
 
 def get_theme_css(theme_mode):
     """
@@ -85,7 +86,7 @@ def get_theme_css(theme_mode):
         }
         """
     
-    return f"""
+    css_content = f"""
     <style>
     {css_variables}
     
@@ -112,6 +113,23 @@ def get_theme_css(theme_mode):
     [data-testid="stSidebar"] {{
         background-color: var(--sidebar-bg) !important;
         border-right: 1px solid var(--card-border) !important;
+    }}
+    
+    /* Ensure all text-containing elements inside the sidebar are highly readable */
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] h4,
+    [data-testid="stSidebar"] h5,
+    [data-testid="stSidebar"] h6,
+    [data-testid="stSidebar"] small,
+    [data-testid="stSidebar"] caption,
+    [data-testid="stSidebar"] div[data-testid="stRadio"] label,
+    [data-testid="stSidebar"] .sidebar-section-header {{
+        color: var(--text) !important;
     }}
     
     /* Input Elements */
@@ -336,6 +354,7 @@ def get_theme_css(theme_mode):
     }}
     </style>
     """
+    return textwrap.dedent(css_content)
 
 def render_header(is_compact=False):
     """
@@ -355,76 +374,74 @@ def render_header(is_compact=False):
         margin = "2rem"
         banner_height = "auto"
         
-    st.markdown(
-        f"""
+    header_html = f"""
+    <div style="
+        background: linear-gradient(135deg, #090f24 0%, #1e1b4b 50%, #064e3b 100%);
+        padding: {padding};
+        border-radius: 16px;
+        border: 1px solid var(--card-border);
+        color: white;
+        text-align: center;
+        margin-bottom: {margin};
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.25);
+        height: {banner_height};
+    ">
+        <!-- Decorative diagonal highlights -->
         <div style="
-            background: linear-gradient(135deg, #090f24 0%, #1e1b4b 50%, #064e3b 100%);
-            padding: {padding};
-            border-radius: 16px;
-            border: 1px solid var(--card-border);
-            color: white;
-            text-align: center;
-            margin-bottom: {margin};
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.25);
-            height: {banner_height};
-        ">
-            <!-- Decorative diagonal highlights -->
-            <div style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 10px,
-                    rgba(16, 185, 129, 0.03) 10px,
-                    rgba(16, 185, 129, 0.03) 20px
-                );
-                pointer-events: none;
-            "></div>
-            
-            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; position: relative; z-index: 1;">
-                <span style="font-size: {title_size};">⚽</span>
-                <h1 style="
-                    color: white !important; 
-                    font-size: {title_size}; 
-                    font-weight: 800; 
-                    margin: 0; 
-                    text-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
-                    font-family: 'Rajdhani', sans-serif !important;
-                    letter-spacing: 1px;
-                ">
-                    ARENAGENIUS 2026
-                </h1>
-                <span style="
-                    background: linear-gradient(90deg, var(--accent), #fbbf24);
-                    padding: 0.2rem 0.6rem;
-                    border-radius: 6px;
-                    font-size: 0.75rem;
-                    font-weight: 800;
-                    color: #040815;
-                    font-family: 'Rajdhani', sans-serif !important;
-                ">
-                    FIFA OPS
-                </span>
-            </div>
-            
-            <p style="
-                display: {subtitle_display};
-                color: var(--muted) !important; 
-                font-size: 1.1rem; 
-                margin-top: 0.75rem; 
-                margin-bottom: 0; 
-                font-weight: 500;
-                letter-spacing: 0.5px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(16, 185, 129, 0.03) 10px,
+                rgba(16, 185, 129, 0.03) 20px
+            );
+            pointer-events: none;
+        "></div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; position: relative; z-index: 1;">
+            <span style="font-size: {title_size};">⚽</span>
+            <h1 style="
+                color: white !important; 
+                font-size: {title_size}; 
+                font-weight: 800; 
+                margin: 0; 
+                text-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+                font-family: 'Rajdhani', sans-serif !important;
+                letter-spacing: 1px;
             ">
-                Tactical Stadium Operations & Real-Time Decision Support • FIFA World Cup 2026
-            </p>
+                ARENAGENIUS 2026
+            </h1>
+            <span style="
+                background: linear-gradient(90deg, var(--accent), #fbbf24);
+                padding: 0.2rem 0.6rem;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: 800;
+                color: #040815;
+                font-family: 'Rajdhani', sans-serif !important;
+            ">
+                FIFA OPS
+            </span>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+        
+        <p style="
+            display: {subtitle_display};
+            color: var(--muted) !important; 
+            font-size: 1.1rem; 
+            margin-top: 0.75rem; 
+            margin-bottom: 0; 
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        ">
+            Tactical Stadium Operations & Real-Time Decision Support • FIFA World Cup 2026
+        </p>
+    </div>
+    """
+    st.markdown(textwrap.dedent(header_html), unsafe_allow_html=True)
