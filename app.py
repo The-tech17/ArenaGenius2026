@@ -1,131 +1,88 @@
 import streamlit as st
 import os
 import google.generativeai as genai
+from utils.theme import get_theme_css, render_header
+from utils.data_simulator import initialize_simulation_state, run_simulation_tick
+from components.dashboard import render_dashboard
+from components.fan_companion import render_fan_companion
+from components.incident_command import render_incident_hub
+from components.analytics import render_analytics
 
-# Configure page layouts and branding
+# 1. Page Config
 st.set_page_config(
-    page_title="ArenaGenius 2026 - Smart Stadium Assistant",
+    page_title="ArenaGenius 2026 - Smart Stadium Platform",
     page_icon="⚽",
     layout="wide"
 )
 
-# Sidebar navigation & settings
+# 2. State & Telemetry Setup
+initialize_simulation_state()
+
+# 3. Sidebar Configuration & Preferences
 with st.sidebar:
-    st.markdown("### 🏟️ Portal Settings")
-    persona = st.selectbox(
-        "Select Your Portal",
-        ["Global Fan Companion", "Operational Incident Command (Staff/Volunteers)", "Live Crowd Analytics & Decision Support"]
+    st.markdown("### 🏟️ ArenaGenius 2026")
+    st.markdown("FIFA World Cup Operations Portal")
+    
+    st.markdown("<div class='sidebar-section-header'>🏟️ VENUE VIEW</div>", unsafe_allow_html=True)
+    
+    # Hierarchical Navigation choices
+    nav_choices = [
+        "🏟 Dashboard",
+        "👥 International Companion",
+        "💬 Chat Assistant",
+        "❓ FAQ Directory",
+        "🚨 Incident Hub",
+        "📊 Operational Analytics",
+        "⚙ Portal Settings"
+    ]
+    
+    # Maintain active page selection in session state
+    if "current_page" not in st.session_state:
+        st.session_state.current_page = "🏟 Dashboard"
+        
+    page = st.radio(
+        "Navigation",
+        nav_choices,
+        label_visibility="collapsed",
+        index=nav_choices.index(st.session_state.current_page)
     )
+    st.session_state.current_page = page
     
     st.markdown("---")
-    st.markdown("### ⚙️ Preferences & API")
-    theme = st.selectbox(
-        "🌓 Select Theme",
-        ["System Default", "Light Mode", "Dark Mode"],
-        index=0
-    )
-    
-    api_key_input = ""
-    if not os.environ.get("GEMINI_API_KEY"):
-        api_key_input = st.text_input("Enter Gemini API Key", type="password")
-    
-    api_key = os.environ.get("GEMINI_API_KEY") or api_key_input
+    st.caption("Active Stadium: MetLife Stadium (NY/NJ)")
 
-if api_key:
-    genai.configure(api_key=api_key)
+# 4. Preferences & Settings Data (Loaded from state or sidebar defaults)
+if "theme_pref" not in st.session_state:
+    st.session_state.theme_pref = "System Default"
+
+if "api_key" not in st.session_state:
+    st.session_state.api_key = os.environ.get("GEMINI_API_KEY", "")
+
+# 5. Inject Dynamic Style
+st.markdown(get_theme_css(st.session_state.theme_pref), unsafe_allow_html=True)
+
+# 6. Configure Gemini GenAI SDK
+if st.session_state.api_key:
+    genai.configure(api_key=st.session_state.api_key)
 else:
-    st.warning("Please provide a Gemini API Key to activate the AI features.")
+    st.sidebar.warning("🔑 Gemini API Key required for full decision support.")
 
-# Inject CSS Themes & Global Styles
-# Theme styles mapping
-if theme == "Dark Mode":
-    css_theme = """
-    :root {
-        --background: #0b0f19;
-        --text: #f8fafc;
-        --sidebar-bg: #111827;
-        --card-bg: #1f2937;
-        --card-border: #374151;
-        --primary: #3b82f6;
-        --accent: #60a5fa;
-        --success: #34d399;
-        --info: #22d3ee;
-        --warning: #fbbf24;
-        --danger: #f87171;
-        --muted: #9ca3af;
-        --radius: 12px;
-        --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-    }
-    """
-elif theme == "Light Mode":
-    css_theme = """
-    :root {
-        --background: #f8fafc;
-        --text: #0f172a;
-        --sidebar-bg: #ffffff;
-        --card-bg: #ffffff;
-        --card-border: #e2e8f0;
-        --primary: #2563eb;
-        --accent: #3b82f6;
-        --success: #10b981;
-        --info: #06b6d4;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --muted: #64748b;
-        --radius: 12px;
-        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    }
-    """
-else:  # System Default
-    css_theme = """
-    :root {
-        --background: #0b0f19;
-        --text: #f8fafc;
-        --sidebar-bg: #111827;
-        --card-bg: #1f2937;
-        --card-border: #374151;
-        --primary: #3b82f6;
-        --accent: #60a5fa;
-        --success: #34d399;
-        --info: #22d3ee;
-        --warning: #fbbf24;
-        --danger: #f87171;
-        --muted: #9ca3af;
-        --radius: 12px;
-        --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-    }
-    @media (prefers-color-scheme: light) {
-        :root {
-            --background: #f8fafc;
-            --text: #0f172a;
-            --sidebar-bg: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --primary: #2563eb;
-            --accent: #3b82f6;
-            --success: #10b981;
-            --info: #06b6d4;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --muted: #64748b;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-        }
-    }
-    """
+# 7. Render Header Banner (Taller on Home Dashboard, 40% reduced height on other sections)
+is_home = (page == "🏟 Dashboard")
+render_header(is_compact=not is_home)
 
-st.markdown(
-    f"""
-    <style>
-    {css_theme}
+# 8. Main Router
+if page == "🏟 Dashboard":
+    render_dashboard()
     
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+elif page == "👥 International Companion":
+    render_fan_companion(st.session_state.api_key)
+    # Force default active tab inside components if needed, handled inside fan_companion
     
-    .stApp {{
-        background-color: var(--background) !important;
-        color: var(--text) !important;
-        font-family: 'Outfit', sans-serif !important;
-    }}
+elif page == "💬 Chat Assistant":
+    # Let fan companion show chat assistant tab
+    # To bypass tab defaults, we can change component tabs manually, or standard tabs work nicely
+    render_fan_companion(st.session_state.api_key)
     
     /* Revert Material Symbols/Icons font-family to Streamlit defaults to avoid text ligatures showing */
     [data-testid="stIconMaterial"], 
@@ -145,11 +102,15 @@ st.markdown(
     h1, h2, h3, h4, h5, h6, p, li, label, select, textarea, input {{
         font-family: 'Outfit', sans-serif !important;
     }}
+elif page == "❓ FAQ Directory":
+    render_fan_companion(st.session_state.api_key)
     
-    h1, h2, h3, h4, h5, h6 {{
-        color: var(--text) !important;
-        font-weight: 600 !important;
-    }}
+elif page == "🚨 Incident Hub":
+    render_incident_hub(st.session_state.api_key)
+>>>>>>> 5f9cb66 (Modified UI and polished the app)
+    
+elif page == "📊 Operational Analytics":
+    render_analytics()
     
     p, span, label, [data-testid="stMarkdownContainer"] p {{
         color: var(--text) !important;
@@ -286,113 +247,35 @@ st.markdown(
 if persona == "Global Fan Companion":
     st.markdown("## 🌍 International Fan Companion")
     st.markdown("Get real-time, multilingual guidance inside the stadium.")
-    
-    with st.container(border=True):
-        st.markdown("### 🎫 Location & Language")
-        col1, col2 = st.columns(2)
-        with col1:
-            stadium = st.selectbox("Select Stadium", ["MetLife Stadium (New York/New Jersey)", "SoFi Stadium (Los Angeles)", "Azteca Stadium (Mexico City)"])
-        with col2:
-            language = st.selectbox("Preferred Language", ["English", "Español", "Français", "Deutsch", "Português", "日本語"])
-            
-        gate = st.text_input("Your Current Location / Entry Gate (e.g., Gate C, Section 214)", placeholder="e.g., Gate B")
-        
-    with st.container(border=True):
-        st.markdown("### ❓ Ask ArenaGenius")
-        user_query = st.text_area("How can we help you today?", placeholder="e.g., Where is the nearest vegetarian food option from my section, and how do I get to the nearest exit?")
-        
-        get_guidance = st.button("Get Instant Guidance")
 
-    if get_guidance and api_key:
-        with st.spinner("Analyzing stadium blueprint and context..."):
-            # System prompt to enforce specific behavior, security, and context logic
-            system_instruction = f"""
-            You are ArenaGenius, an elite AI Concierge for the FIFA World Cup 2026 at {stadium}. 
-            The user is currently near {gate}. Respond strictly in {language}.
-            Provide concise, highly actionable, polite, and practical stadium navigation or policy answers.
-            If safety rules are violated or out-of-scope questions are asked, politely redirect back to tournament operations.
-            """
+elif page == "⚙ Portal Settings":
+    st.markdown("## ⚙ Settings & Sandbox Operations")
+    st.markdown("Configure core interfaces, API bindings, and clear telemetry databases.")
+    
+    with st.container(border=True):
+        st.markdown("### 🔑 API Authentication")
+        api_val = st.text_input(
+            "Gemini API Key", 
+            value=st.session_state.api_key, 
+            type="password",
+            help="Allows calculations and automated incident checklists."
+        )
+        if api_val != st.session_state.api_key:
+            st.session_state.api_key = api_val
+            st.rerun()
             
-            model = genai.GenerativeModel(
-                model_name="gemini-2.5-flash",
-                system_instruction=system_instruction
-            )
+    with st.container(border=True):
+        st.markdown("### 🌓 UI Preferences")
+        theme_val = st.selectbox(
+            "Select Portal Theme",
+            ["System Default", "Light Mode", "Dark Mode"],
+            index=["System Default", "Light Mode", "Dark Mode"].index(st.session_state.theme_pref)
+        )
+        if theme_val != st.session_state.theme_pref:
+            st.session_state.theme_pref = theme_val
+            st.rerun()
             
-            response = model.generate_content(user_query)
-            st.success("✨ AI Guide Recommendation:")
-            st.write(response.text)
 
-# -------------------------------------------------------------------------
-# PERSONA 2: OPERATIONAL INCIDENT COMMAND (STAFF/VOLUNTEERS)
-# -------------------------------------------------------------------------
-elif persona == "Operational Incident Command (Staff/Volunteers)":
-    st.markdown("## 📋 Volunteer & Staff Incident Protocol Hub")
-    st.markdown("Report live issues to receive automated, compliant operational steps.")
-    
-    with st.container(border=True):
-        st.markdown("### ⚠️ Incident Information")
-        col1, col2 = st.columns(2)
-        with col1:
-            incident_type = st.selectbox("Incident Category", ["Crowd Bottleneck", "Medical Assistance Needed", "Facilities/Spill Issue", "Ticketing/Scanner Failure"])
-        with col2:
-            location = st.text_input("Exact Location (e.g., Concourse Level 2, Pod 4)")
-            
-        severity = st.radio("Severity Level", ["Low (Routine)", "Medium (Requires Attention)", "High (Immediate Escalation Required)"], horizontal=True)
-        
-    with st.container(border=True):
-        st.markdown("### 📝 Incident Details")
-        details = st.text_area("Describe the situation details:")
-        
-        generate_plan = st.button("Generate Protocol & Action Plan")
-    
-    if generate_plan and api_key:
-        with st.spinner("Synthesizing standard operating procedures..."):
-            staff_prompt = f"""
-            Context: A FIFA World Cup 2026 stadium staff member has reported an issue.
-            Incident Type: {incident_type}
-            Location: {location}
-            Severity: {severity}
-            Details: {details}
-            
-            Task: Provide a clear, step-by-step checklist of immediate physical actions the staff member should take. Include communication protocols (who to radio) and safety measures. Keep it highly professional and direct.
-            """
-            model = genai.GenerativeModel("gemini-2.5-flash")
-            response = model.generate_content(staff_prompt)
-            
-            st.info("⚡ Immediate Action Plan Generated:")
-            st.write(response.text)
-
-# -------------------------------------------------------------------------
-# PERSONA 3: LIVE CROWD ANALYTICS & DECISION SUPPORT
-# -------------------------------------------------------------------------
-elif persona == "Live Crowd Analytics & Decision Support":
-    st.markdown("## 📊 Real-time Dispersal & Decision Support Matrix")
-    st.markdown("Generates real-time announcements and traffic routing logic based on stadium outflow data post-match.")
-    
-    with st.container(border=True):
-        st.markdown("### 🏟️ Current Match Outflow Metrics")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Main Metro Line Gate", "92% Capacity", "Heavy Bottleneck", delta_color="inverse")
-        with col2:
-            st.metric("North Parking Shuttle Zone", "45% Capacity", "Optimal Flow", delta_color="normal")
-        with col3:
-            st.metric("Rideshare Zone B", "78% Capacity", "Moderate Delay", delta_color="inverse")
-            
-    with st.container(border=True):
-        st.markdown("### 📢 Announcement Strategy")
-        announcement_tone = st.selectbox("Announcement Strategy", ["Standard Directing", "Emergency Rerouting", "Sustainability Focus (Encouraging Walking/Buses)"])
-        
-        formulate_strategy = st.button("Formulate Routing Strategy")
-        
-    if formulate_strategy and api_key:
-        with st.spinner("Calculating optimal dispersal parameters..."):
-            analytics_prompt = f"""
-            Analyze this post-match logistics state:
-            - Metro Gate: 92% capacity (Bottlenecked)
-            - North Shuttle: 45% capacity (Clear)
-            - Rideshare Zone B: 78% capacity (Delayed)
-            
             Generate:
             1. An optimization recommendation for stadium managers on how to divert foot traffic.
             2. A clear, friendly public PA audio announcement script matching a '{announcement_tone}' tone to seamlessly steer fans toward underutilized transit assets without causing panic.
@@ -401,3 +284,12 @@ elif persona == "Live Crowd Analytics & Decision Support":
             response = model.generate_content(analytics_prompt)
             st.success("📈 Strategic Directives:")
             st.write(response.text)
+    with st.container(border=True):
+        st.markdown("### 🧹 Database Resets")
+        st.caption("Clears logged incidents and telemetry streams.")
+        if st.button("Reset Telemetry Database"):
+            st.session_state.pop("sim_initialized", None)
+            st.session_state.pop("incidents_db", None)
+            st.session_state.pop("telemetry_feed", None)
+            st.toast("Telemetry data reset to defaults!", icon="🧹")
+            st.rerun()
