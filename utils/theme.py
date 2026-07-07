@@ -1,5 +1,14 @@
 import streamlit as st
-import textwrap
+
+def clean_html(html_str):
+    """
+    Strips all leading whitespace from each line in the HTML/CSS string
+    to prevent the Streamlit Markdown parser from treating indented lines
+    as preformatted code blocks.
+    """
+    if not html_str:
+        return ""
+    return "\n".join([line.lstrip() for line in html_str.split("\n")])
 
 def get_theme_css(theme_mode):
     """
@@ -354,7 +363,7 @@ def get_theme_css(theme_mode):
     }}
     </style>
     """
-    return textwrap.dedent(css_content)
+    return clean_html(css_content)
 
 def render_header(is_compact=False):
     """
@@ -444,4 +453,4 @@ def render_header(is_compact=False):
         </p>
     </div>
     """
-    st.markdown(textwrap.dedent(header_html), unsafe_allow_html=True)
+    st.markdown(clean_html(header_html), unsafe_allow_html=True)
