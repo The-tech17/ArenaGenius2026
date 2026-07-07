@@ -84,170 +84,15 @@ elif page == "💬 Chat Assistant":
     # To bypass tab defaults, we can change component tabs manually, or standard tabs work nicely
     render_fan_companion(st.session_state.api_key)
     
-    /* Revert Material Symbols/Icons font-family to Streamlit defaults to avoid text ligatures showing */
-    [data-testid="stIconMaterial"], 
-    .material-symbols-outlined, 
-    .material-icons,
-    .stIcon,
-    [class*="material-symbols"], 
-    [class*="material-icons"] {{
-        font-family: 'Material Symbols Outlined', 'Material Symbols Rounded', 'Material Symbols Sharp', 'Material Icons', sans-serif !important;
-    }}
-    
-    [data-testid="stSidebar"] {{
-        background-color: var(--sidebar-bg) !important;
-        border-right: 1px solid var(--card-border) !important;
-    }}
-    
-    h1, h2, h3, h4, h5, h6, p, li, label, select, textarea, input {{
-        font-family: 'Outfit', sans-serif !important;
-    }}
 elif page == "❓ FAQ Directory":
     render_fan_companion(st.session_state.api_key)
     
 elif page == "🚨 Incident Hub":
     render_incident_hub(st.session_state.api_key)
->>>>>>> 5f9cb66 (Modified UI and polished the app)
     
 elif page == "📊 Operational Analytics":
     render_analytics()
     
-    p, span, label, [data-testid="stMarkdownContainer"] p {{
-        color: var(--text) !important;
-    }}
-    
-    div[data-baseweb="input"], div[data-baseweb="select"] > div, textarea, input {{
-        background-color: var(--card-bg) !important;
-        color: var(--text) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: var(--radius) !important;
-        transition: all 0.2s ease-in-out !important;
-    }}
-    div[data-baseweb="select"] > div * {{
-        color: var(--text) !important;
-    }}
-    div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within > div, textarea:focus, input:focus {{
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-    }}
-    
-    div[role="listbox"] ul li,
-    ul[data-testid="stSelectboxVirtualDropdown"] li[role="option"] {{
-        font-family: 'Outfit', sans-serif !important;
-        background-color: var(--card-bg) !important;
-        color: var(--text) !important;
-        transition: background-color 0.2s ease-in-out !important;
-    }}
-    div[role="listbox"] ul li:hover,
-    ul[data-testid="stSelectboxVirtualDropdown"] li[role="option"]:hover {{
-        background-color: var(--primary) !important;
-        color: white !important;
-    }}
-    
-    div[data-testid="stButton"] button {{
-        font-family: 'Outfit', sans-serif !important;
-        background-color: var(--primary) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: var(--radius) !important;
-        padding: 0.6rem 1.5rem !important;
-        font-weight: 600 !important;
-        box-shadow: var(--shadow) !important;
-        transition: all 0.2s ease-in-out !important;
-        width: 100% !important;
-    }}
-    div[data-testid="stButton"] button:hover {{
-        background-color: var(--accent) !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-    }}
-    div[data-testid="stButton"] button:active {{
-        transform: translateY(0) !important;
-    }}
-    
-    div[data-testid="stVerticalBlockBorderWrapper"] {{
-        background-color: var(--card-bg) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: var(--radius) !important;
-        padding: 1.5rem !important;
-        box-shadow: var(--shadow) !important;
-        margin-bottom: 1.5rem !important;
-    }}
-    
-    div[data-testid="metric-container"] {{
-        background-color: var(--card-bg) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: var(--radius) !important;
-        padding: 1rem !important;
-        box-shadow: var(--shadow) !important;
-    }}
-    div[data-testid="stMetricLabel"] {{
-        font-family: 'Outfit', sans-serif !important;
-        color: var(--muted) !important;
-        font-size: 0.9rem !important;
-        font-weight: 500 !important;
-    }}
-    div[data-testid="stMetricValue"] {{
-        font-family: 'Outfit', sans-serif !important;
-        color: var(--text) !important;
-        font-size: 1.8rem !important;
-        font-weight: 700 !important;
-    }}
-    
-    div[data-testid="stAlert"] {{
-        font-family: 'Outfit', sans-serif !important;
-        border-radius: var(--radius) !important;
-        background-color: var(--card-bg) !important;
-        border: 1px solid var(--card-border) !important;
-        box-shadow: var(--shadow) !important;
-    }}
-    
-    .stDeployButton {{
-        display: none !important;
-    }}
-    [data-testid="stHeader"] {{
-        background-color: transparent !important;
-    }}
-    
-    div[data-testid="stRadio"] > label {{
-        color: var(--text) !important;
-    }}
-    div[data-testid="stRadio"] div[role="radiogroup"] {{
-        gap: 1.5rem !important;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# Application Header (Vibrant premium banner)
-st.markdown(
-    """
-    <div style="
-        background: linear-gradient(135deg, #1e40af, #3b82f6, #06b6d4);
-        padding: 2.5rem;
-        border-radius: 16px;
-        color: white;
-        text-align: center;
-        margin-bottom: 2.5rem;
-        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-    ">
-        <h1 style="color: white !important; font-size: 2.5rem; font-weight: 800; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.15);">⚽ ArenaGenius 2026</h1>
-        <p style="color: rgba(255, 255, 255, 0.9) !important; font-size: 1.1rem; margin-top: 0.5rem; margin-bottom: 0; font-weight: 500;">
-            Smart Stadium & Tournament Operations Assistant — FIFA World Cup 2026
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# -------------------------------------------------------------------------
-# PERSONA 1: GLOBAL FAN COMPANION
-# -------------------------------------------------------------------------
-if persona == "Global Fan Companion":
-    st.markdown("## 🌍 International Fan Companion")
-    st.markdown("Get real-time, multilingual guidance inside the stadium.")
-
 elif page == "⚙ Portal Settings":
     st.markdown("## ⚙ Settings & Sandbox Operations")
     st.markdown("Configure core interfaces, API bindings, and clear telemetry databases.")
@@ -275,15 +120,6 @@ elif page == "⚙ Portal Settings":
             st.session_state.theme_pref = theme_val
             st.rerun()
             
-
-            Generate:
-            1. An optimization recommendation for stadium managers on how to divert foot traffic.
-            2. A clear, friendly public PA audio announcement script matching a '{announcement_tone}' tone to seamlessly steer fans toward underutilized transit assets without causing panic.
-            """
-            model = genai.GenerativeModel("gemini-2.5-flash")
-            response = model.generate_content(analytics_prompt)
-            st.success("📈 Strategic Directives:")
-            st.write(response.text)
     with st.container(border=True):
         st.markdown("### 🧹 Database Resets")
         st.caption("Clears logged incidents and telemetry streams.")
