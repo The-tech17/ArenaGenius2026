@@ -127,12 +127,22 @@ st.markdown(
         font-family: 'Outfit', sans-serif !important;
     }}
     
+    /* Revert Material Symbols/Icons font-family to Streamlit defaults to avoid text ligatures showing */
+    [data-testid="stIconMaterial"], 
+    .material-symbols-outlined, 
+    .material-icons,
+    .stIcon,
+    [class*="material-symbols"], 
+    [class*="material-icons"] {{
+        font-family: 'Material Symbols Outlined', 'Material Symbols Rounded', 'Material Symbols Sharp', 'Material Icons', sans-serif !important;
+    }}
+    
     [data-testid="stSidebar"] {{
         background-color: var(--sidebar-bg) !important;
         border-right: 1px solid var(--card-border) !important;
     }}
     
-    h1, h2, h3, h4, h5, h6, p, span, li, label, div, button, select, textarea, input {{
+    h1, h2, h3, h4, h5, h6, p, li, label, select, textarea, input {{
         font-family: 'Outfit', sans-serif !important;
     }}
     
@@ -145,29 +155,36 @@ st.markdown(
         color: var(--text) !important;
     }}
     
-    div[data-baseweb="input"], div[data-baseweb="select"], textarea, input {{
+    div[data-baseweb="input"], div[data-baseweb="select"] > div, textarea, input {{
         background-color: var(--card-bg) !important;
         color: var(--text) !important;
         border: 1px solid var(--card-border) !important;
         border-radius: var(--radius) !important;
         transition: all 0.2s ease-in-out !important;
     }}
-    div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within, textarea:focus, input:focus {{
+    div[data-baseweb="select"] > div * {{
+        color: var(--text) !important;
+    }}
+    div[data-baseweb="input"]:focus-within, div[data-baseweb="select"]:focus-within > div, textarea:focus, input:focus {{
         border-color: var(--primary) !important;
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
     }}
     
-    div[role="listbox"] ul li {{
+    div[role="listbox"] ul li,
+    ul[data-testid="stSelectboxVirtualDropdown"] li[role="option"] {{
+        font-family: 'Outfit', sans-serif !important;
         background-color: var(--card-bg) !important;
         color: var(--text) !important;
         transition: background-color 0.2s ease-in-out !important;
     }}
-    div[role="listbox"] ul li:hover {{
+    div[role="listbox"] ul li:hover,
+    ul[data-testid="stSelectboxVirtualDropdown"] li[role="option"]:hover {{
         background-color: var(--primary) !important;
         color: white !important;
     }}
     
     div[data-testid="stButton"] button {{
+        font-family: 'Outfit', sans-serif !important;
         background-color: var(--primary) !important;
         color: white !important;
         border: none !important;
@@ -204,17 +221,20 @@ st.markdown(
         box-shadow: var(--shadow) !important;
     }}
     div[data-testid="stMetricLabel"] {{
+        font-family: 'Outfit', sans-serif !important;
         color: var(--muted) !important;
         font-size: 0.9rem !important;
         font-weight: 500 !important;
     }}
     div[data-testid="stMetricValue"] {{
+        font-family: 'Outfit', sans-serif !important;
         color: var(--text) !important;
         font-size: 1.8rem !important;
         font-weight: 700 !important;
     }}
     
     div[data-testid="stAlert"] {{
+        font-family: 'Outfit', sans-serif !important;
         border-radius: var(--radius) !important;
         background-color: var(--card-bg) !important;
         border: 1px solid var(--card-border) !important;
