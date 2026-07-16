@@ -197,12 +197,33 @@ def get_theme_css(theme_mode):
         color: var(--text) !important;
     }}
 
-    /* FIX: main-content widget labels (e.g. "Current Location Stadium",
-       "Preferred Language") were left on Streamlit's built-in label color,
-       which is a dark charcoal tuned for a light background. It happened
-       to read fine in Light Mode but went near-invisible against Dark
-       Mode's near-black background. Force these to follow --text so they
-       flip correctly with the active theme, same as the sidebar labels above. */
+    /* ==========================================
+       🔥 FIX: FORCE DARK MODE CONTRAST VISIBILITY
+       ========================================== */
+    /* Force form field questions, titles, and text areas to respect standard colors */
+    div[data-testid="stRadio"] label, 
+    div[data-testid="stRadio"] p,
+    .stMarkdown p,
+    .stSelectbox label,
+    .stTextInput label,
+    .stTextArea label {{
+        color: var(--text) !important;
+    }}
+
+    /* Target input element placeholders globally */
+    input::placeholder, textarea::placeholder {{
+        color: var(--muted) !important;
+        opacity: 0.85 !important;
+    }}
+
+    /* Force visibility for values inside inputs and selectboxes */
+    div[data-testid="stTextInput"] input,
+    div[data-testid="stTextArea"] textarea,
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] {{
+        color: var(--text) !important;
+        background-color: var(--card-bg) !important;
+    }}
+    
     [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] label,
     [data-testid="stWidgetLabel"] div,

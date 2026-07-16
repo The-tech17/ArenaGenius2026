@@ -44,24 +44,81 @@ def render_interactive_map(selected_loc):
     Generates a premium interactive SVG stadium map inside an HTML iframe.
     Hovering changes colors, clicking redirects parent URL search parameters to sync selection.
     """
-    # Define fill colors for the SVG sectors
+    # Determine the theme preference
+    theme_pref = st.session_state.get("theme_pref", "System Default")
+    
+    # Define CSS variables based on theme preference for iframe styling
+    if theme_pref == "Dark Mode":
+        css_variables = """
+        :root {
+            --rim-fill: #0b1329;
+            --rim-stroke: #1d2554;
+            --concourse-fill: #1e293b;
+            --bowl-fill: #0f172a;
+            --pitch-fill: #065f46;
+            --text-color: #94a3b8;
+            --selected-text-color: #ffffff;
+            --highlight-fill: #10b981;
+        }
+        """
+    elif theme_pref == "Light Mode":
+        css_variables = """
+        :root {
+            --rim-fill: #cbd5e1;
+            --rim-stroke: #94a3b8;
+            --concourse-fill: #f1f5f9;
+            --bowl-fill: #e2e8f0;
+            --pitch-fill: #10b981;
+            --text-color: #475569;
+            --selected-text-color: #0f172a;
+            --highlight-fill: #0f52ba;
+        }
+        """
+    else:  # System Default
+        css_variables = """
+        :root {
+            --rim-fill: #0b1329;
+            --rim-stroke: #1d2554;
+            --concourse-fill: #1e293b;
+            --bowl-fill: #0f172a;
+            --pitch-fill: #065f46;
+            --text-color: #94a3b8;
+            --selected-text-color: #ffffff;
+            --highlight-fill: #10b981;
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --rim-fill: #cbd5e1;
+                --rim-stroke: #94a3b8;
+                --concourse-fill: #f1f5f9;
+                --bowl-fill: #e2e8f0;
+                --pitch-fill: #10b981;
+                --text-color: #475569;
+                --selected-text-color: #0f172a;
+                --highlight-fill: #0a0f24;
+            }
+        }
+        """
+
+    # Define fill colors for the SVG sectors using variables
     colors = {
-        "North Concourse": "#1e293b",
-        "East Concourse": "#1e293b",
-        "South Concourse": "#1e293b",
-        "West Concourse": "#1e293b",
-        "Seating Bowl": "#0f172a"
+        "North Concourse": "var(--concourse-fill)",
+        "East Concourse": "var(--concourse-fill)",
+        "South Concourse": "var(--concourse-fill)",
+        "West Concourse": "var(--concourse-fill)",
+        "Seating Bowl": "var(--bowl-fill)"
     }
     
     # Highlight the selected location if matching one of the sectors
     if selected_loc in colors:
-        colors[selected_loc] = "#10b981" # Emerald Green highlight
+        colors[selected_loc] = "var(--highlight-fill)"
         
     svg_html = f"""
     <!DOCTYPE html>
     <html>
     <head>
         <style>
+            {css_variables}
             body {{
                 margin: 0;
                 padding: 0;
@@ -87,12 +144,12 @@ def render_interactive_map(selected_loc):
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 font-size: 10px;
                 font-weight: bold;
-                fill: #94a3b8;
+                fill: var(--text-color);
                 pointer-events: none;
                 text-anchor: middle;
             }}
             .selected-label {{
-                fill: #ffffff;
+                fill: var(--selected-text-color);
                 font-size: 11px;
                 text-shadow: 0 1px 3px rgba(0,0,0,0.8);
             }}
@@ -109,31 +166,31 @@ def render_interactive_map(selected_loc):
     <body>
         <svg viewBox="0 0 500 350" width="100%" height="100%" style="border-radius: 12px; max-width: 500px;">
             <!-- Outer Stadium Rim -->
-            <ellipse cx="250" cy="175" rx="230" ry="155" fill="#0b1329" stroke="#1d2554" stroke-width="4" />
+            <ellipse cx="250" cy="175" rx="230" ry="155" fill="var(--rim-fill)" stroke="var(--rim-stroke)" stroke-width="4" />
             
             <!-- Concourse Quadrants -->
             <!-- North Concourse -->
             <path id="North Concourse" class="clickable" d="M 90 90 A 230 155 0 0 1 410 90 L 360 120 A 150 100 0 0 0 140 120 Z" 
-                  fill="{colors['North Concourse']}" stroke="#1d2554" stroke-width="2" onclick="selectSection('North Concourse')" />
+                  fill="{colors['North Concourse']}" stroke="var(--rim-stroke)" stroke-width="2" onclick="selectSection('North Concourse')" />
                   
             <!-- East Concourse -->
             <path id="East Concourse" class="clickable" d="M 410 90 A 230 155 0 0 1 410 260 L 360 230 A 150 100 0 0 0 360 120 Z" 
-                  fill="{colors['East Concourse']}" stroke="#1d2554" stroke-width="2" onclick="selectSection('East Concourse')" />
+                  fill="{colors['East Concourse']}" stroke="var(--rim-stroke)" stroke-width="2" onclick="selectSection('East Concourse')" />
                   
             <!-- South Concourse -->
             <path id="South Concourse" class="clickable" d="M 410 260 A 230 155 0 0 1 90 260 L 140 230 A 150 100 0 0 0 360 230 Z" 
-                  fill="{colors['South Concourse']}" stroke="#1d2554" stroke-width="2" onclick="selectSection('South Concourse')" />
+                  fill="{colors['South Concourse']}" stroke="var(--rim-stroke)" stroke-width="2" onclick="selectSection('South Concourse')" />
                   
             <!-- West Concourse -->
             <path id="West Concourse" class="clickable" d="M 90 260 A 230 155 0 0 1 90 90 L 140 120 A 150 100 0 0 0 140 230 Z" 
-                  fill="{colors['West Concourse']}" stroke="#1d2554" stroke-width="2" onclick="selectSection('West Concourse')" />
+                  fill="{colors['West Concourse']}" stroke="var(--rim-stroke)" stroke-width="2" onclick="selectSection('West Concourse')" />
             
             <!-- Seating Bowl -->
             <ellipse id="Seating Bowl" class="clickable" cx="250" cy="175" rx="120" ry="75" 
                      fill="{colors['Seating Bowl']}" stroke="#fbbf24" stroke-width="3" onclick="selectSection('Seating Bowl')" />
             
             <!-- Central Pitch -->
-            <rect x="200" y="145" width="100" height="60" rx="3" fill="#065f46" class="field" />
+            <rect x="200" y="145" width="100" height="60" rx="3" fill="var(--pitch-fill)" class="field" />
             <circle cx="250" cy="175" r="15" fill="none" stroke="#ffffff" stroke-width="1.5" />
             <line x1="250" y1="145" x2="250" y2="205" stroke="#ffffff" stroke-width="1.5" />
             
@@ -142,7 +199,7 @@ def render_interactive_map(selected_loc):
             <text x="250" y="295" class="label {'selected-label' if selected_loc == 'South Concourse' else ''}">SOUTH CONCOURSE</text>
             <text x="430" y="180" class="label {'selected-label' if selected_loc == 'East Concourse' else ''}" transform="rotate(90 430 180)">EAST CONCOURSE</text>
             <text x="70" y="180" class="label {'selected-label' if selected_loc == 'West Concourse' else ''}" transform="rotate(-90 70 180)">WEST CONCOURSE</text>
-            <text x="250" y="178" class="label" fill="#ffffff" font-size="9px" style="opacity: 0.6;">PITCH</text>
+            <text x="250" y="178" fill="#ffffff" font-size="9px" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: bold; text-anchor: middle; opacity: 0.6;">PITCH</text>
             
             <!-- Dynamic Exit Gates Indicators -->
             <circle cx="250" cy="20" r="8" fill="#f43f5e" /> <text x="250" y="23" class="marker-text">A</text>
