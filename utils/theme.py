@@ -136,10 +136,24 @@ def get_theme_css(theme_mode):
             }
         }
         """
-    
+
+    # --- FIX: fixed "on-dark" text tokens -------------------------------
+    # The hero banner and the ticket card use a hardcoded dark background
+    # in every theme mode. Text sitting on them must NOT use --text/--muted
+    # (which flip with the mode) or contrast collapses in Light Mode and
+    # stays weak-but-present in Dark Mode. These two tokens are intentionally
+    # identical across all three branches above.
+    on_dark_tokens = """
+    :root {
+        --on-dark-text: #ffffff;
+        --on-dark-muted: rgba(226, 232, 240, 0.78);
+    }
+    """
+
     css_content = f"""
     <style>
     {css_variables}
+    {on_dark_tokens}
     
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
     
@@ -884,12 +898,18 @@ def get_theme_css(theme_mode):
     .badge-success {{ background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }}
     
     /* Ticket confirmation styling */
+    /* FIX: the ticket card is a fixed "premium dark" surface in every theme,
+       so its background no longer follows --card-bg (which turns white in
+       Light Mode and made white text vanish). It now always renders on a
+       fixed dark gradient, and its text tokens use --on-dark-text /
+       --on-dark-muted instead of --text / --muted so it stays legible
+       regardless of the active theme mode. */
     .ticket-container {{
-        background: linear-gradient(145deg, var(--card-bg), #1e1b4b);
+        background: linear-gradient(145deg, #0f172a, #1e1b4b);
         border: 2px solid var(--primary);
         border-radius: var(--radius);
         padding: 2rem;
-        color: white;
+        color: var(--on-dark-text);
         margin-top: 1.5rem;
         position: relative;
         overflow: hidden;
@@ -930,7 +950,7 @@ def get_theme_css(theme_mode):
     
     .ticket-label {{
         font-size: 0.8rem;
-        color: var(--muted);
+        color: var(--on-dark-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }}
@@ -938,7 +958,7 @@ def get_theme_css(theme_mode):
     .ticket-value {{
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--text);
+        color: var(--on-dark-text);
     }}
     
     /* Pulse Animation for Live telemetry indicator */
@@ -1048,7 +1068,7 @@ def get_theme_css(theme_mode):
 
     .header-ops-grid span {{
         display: block;
-        color: rgba(226, 232, 240, 0.72);
+        color: var(--on-dark-muted);
         font-size: 0.68rem;
         font-weight: 800;
         text-transform: uppercase;
@@ -1057,7 +1077,7 @@ def get_theme_css(theme_mode):
 
     .header-ops-grid strong {{
         display: block;
-        color: white;
+        color: var(--on-dark-text);
         margin-top: 0.28rem;
         font-family: 'Rajdhani', sans-serif !important;
         font-size: 1.12rem;
@@ -1208,100 +1228,16 @@ def get_theme_css(theme_mode):
     """
     return clean_html(css_content)
 
-def render_header(is_compact=False):
-    """
-    Renders a stunning FIFA-branded header banner.
-    Reduces height by ~40% and switches layout when is_compact is True.
-    """
-    if is_compact:
-        padding = "1rem 2rem"
-        title_size = "1.8rem"
-        subtitle_display = "none"
-        margin = "1rem"
-        banner_height = "auto"
-    else:
-        padding = "2rem"
-        title_size = "2.6rem"
-        subtitle_display = "block"
-        margin = "2rem"
-        banner_height = "auto"
-        
-    header_html = f"""
-    <div style="
-        background: linear-gradient(135deg, #090f24 0%, #1e1b4b 50%, #064e3b 100%);
-        padding: {padding};
-        border-radius: 16px;
-        border: 1px solid var(--card-border);
-        color: white;
-        text-align: center;
-        margin-bottom: {margin};
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.25);
-        height: {banner_height};
-    ">
-        <!-- Decorative diagonal highlights -->
-        <div style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(16, 185, 129, 0.03) 10px,
-                rgba(16, 185, 129, 0.03) 20px
-            );
-            pointer-events: none;
-        "></div>
-        
-        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; position: relative; z-index: 1;">
-            <span style="font-size: {title_size};">⚽</span>
-            <h1 style="
-                color: white !important; 
-                font-size: {title_size}; 
-                font-weight: 800; 
-                margin: 0; 
-                text-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
-                font-family: 'Rajdhani', sans-serif !important;
-                letter-spacing: 1px;
-            ">
-                ARENAGENIUS 2026
-            </h1>
-            <span style="
-                background: linear-gradient(90deg, var(--accent), #fbbf24);
-                padding: 0.2rem 0.6rem;
-                border-radius: 6px;
-                font-size: 0.75rem;
-                font-weight: 800;
-                color: #040815;
-                font-family: 'Rajdhani', sans-serif !important;
-            ">
-                FIFA OPS
-            </span>
-        </div>
-        
-        <p style="
-            display: {subtitle_display};
-            color: var(--muted) !important; 
-            font-size: 1.1rem; 
-            margin-top: 0.75rem; 
-            margin-bottom: 0; 
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        ">
-            Tactical Stadium Operations & Real-Time Decision Support • FIFA World Cup 2026
-        </p>
-    </div>
-    """
-    st.markdown(clean_html(header_html), unsafe_allow_html=True)
-
 
 def render_header(is_compact=False):
     """
     Renders the ArenaGenius brand banner with home-page operations telemetry.
+
+    NOTE: This banner always sits on a hardcoded dark gradient regardless of
+    the active theme, so its inline text colors use the fixed
+    --on-dark-text / --on-dark-muted tokens (never --text/--muted, which
+    flip with light/dark mode and would otherwise disappear against this
+    background in Light Mode, or read at low contrast in Dark Mode).
     """
     if is_compact:
         padding = "1rem 2rem"
@@ -1345,7 +1281,7 @@ def render_header(is_compact=False):
         padding: {padding};
         border-radius: var(--radius);
         border: 1px solid var(--card-border);
-        color: white;
+        color: var(--on-dark-text);
         text-align: center;
         margin-bottom: {margin};
         position: relative;
@@ -1370,9 +1306,9 @@ def render_header(is_compact=False):
         "></div>
 
         <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; position: relative; z-index: 1;">
-            <span style="font-size: {title_size}; font-family: 'Rajdhani', sans-serif !important; font-weight: 800;">AG</span>
+            <span style="font-size: {title_size}; font-family: 'Rajdhani', sans-serif !important; font-weight: 800; color: var(--on-dark-text);">AG</span>
             <h1 style="
-                color: white !important;
+                color: var(--on-dark-text) !important;
                 font-size: {title_size};
                 font-weight: 800;
                 margin: 0;
@@ -1397,7 +1333,7 @@ def render_header(is_compact=False):
 
         <p style="
             display: {subtitle_display};
-            color: var(--muted) !important;
+            color: var(--on-dark-muted) !important;
             font-size: 1.1rem;
             margin-top: 0.75rem;
             margin-bottom: 0;
