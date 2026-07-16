@@ -196,6 +196,30 @@ def get_theme_css(theme_mode):
     [data-testid="stSidebar"] .sidebar-section-header {{
         color: var(--text) !important;
     }}
+
+    /* FIX: main-content widget labels (e.g. "Current Location Stadium",
+       "Preferred Language") were left on Streamlit's built-in label color,
+       which is a dark charcoal tuned for a light background. It happened
+       to read fine in Light Mode but went near-invisible against Dark
+       Mode's near-black background. Force these to follow --text so they
+       flip correctly with the active theme, same as the sidebar labels above. */
+    [data-testid="stWidgetLabel"] p,
+    [data-testid="stWidgetLabel"] label,
+    [data-testid="stWidgetLabel"] div,
+    [data-testid="stWidgetLabel"] span,
+    .stSelectbox label,
+    .stTextInput label,
+    .stTextArea label,
+    .stNumberInput label,
+    .stDateInput label,
+    .stTimeInput label,
+    .stMultiSelect label,
+    .stCheckbox label,
+    .stRadio label,
+    div[data-testid="stCaptionContainer"] {{
+        color: var(--text) !important;
+        opacity: 1 !important;
+    }}
     
     /* Input Elements */
     div[data-baseweb="input"], div[data-baseweb="select"] > div, textarea, input {{
