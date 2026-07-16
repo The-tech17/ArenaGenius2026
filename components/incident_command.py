@@ -5,6 +5,7 @@ import random
 import time
 from utils.data_simulator import get_stadium_details, initialize_simulation_state
 from utils.theme import clean_html
+from utils.security import is_valid_api_key, sanitize_html
 
 def calculate_priority_score(crowd_size_val, severity_val, location_val, time_val):
     """
@@ -44,6 +45,8 @@ def render_interactive_map(selected_loc):
     Generates a premium interactive SVG stadium map inside an HTML iframe.
     Hovering changes colors, clicking redirects parent URL search parameters to sync selection.
     """
+    # Sanitize inputs
+    selected_loc_s = sanitize_html(selected_loc)
     # Determine the theme preference
     theme_pref = st.session_state.get("theme_pref", "System Default")
     
@@ -164,7 +167,7 @@ def render_interactive_map(selected_loc):
         </style>
     </head>
     <body>
-        <svg viewBox="0 0 500 350" width="100%" height="100%" style="border-radius: 12px; max-width: 500px;">
+        <svg viewBox="0 0 500 350" width="100%" height="100%" style="border-radius: 12px; max-width: 500px;" role="img" aria-label="FIFA World Cup Stadium Layout Map">
             <!-- Outer Stadium Rim -->
             <ellipse cx="250" cy="175" rx="230" ry="155" fill="var(--rim-fill)" stroke="var(--rim-stroke)" stroke-width="4" />
             
@@ -195,10 +198,10 @@ def render_interactive_map(selected_loc):
             <line x1="250" y1="145" x2="250" y2="205" stroke="#ffffff" stroke-width="1.5" />
             
             <!-- Labels -->
-            <text x="250" y="70" class="label {'selected-label' if selected_loc == 'North Concourse' else ''}">NORTH CONCOURSE</text>
-            <text x="250" y="295" class="label {'selected-label' if selected_loc == 'South Concourse' else ''}">SOUTH CONCOURSE</text>
-            <text x="430" y="180" class="label {'selected-label' if selected_loc == 'East Concourse' else ''}" transform="rotate(90 430 180)">EAST CONCOURSE</text>
-            <text x="70" y="180" class="label {'selected-label' if selected_loc == 'West Concourse' else ''}" transform="rotate(-90 70 180)">WEST CONCOURSE</text>
+            <text x="250" y="70" class="label {'selected-label' if selected_loc_s == 'North Concourse' else ''}">NORTH CONCOURSE</text>
+            <text x="250" y="295" class="label {'selected-label' if selected_loc_s == 'South Concourse' else ''}">SOUTH CONCOURSE</text>
+            <text x="430" y="180" class="label {'selected-label' if selected_loc_s == 'East Concourse' else ''}" transform="rotate(90 430 180)">EAST CONCOURSE</text>
+            <text x="70" y="180" class="label {'selected-label' if selected_loc_s == 'West Concourse' else ''}" transform="rotate(-90 70 180)">WEST CONCOURSE</text>
             <text x="250" y="178" fill="#ffffff" font-size="9px" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: bold; text-anchor: middle; opacity: 0.6;">PITCH</text>
             
             <!-- Dynamic Exit Gates Indicators -->
@@ -375,8 +378,8 @@ def render_incident_hub(api_key):
 
         # Process Submission
         if submit_incident:
-            if not api_key:
-                st.warning("Please provide a Gemini API Key in Settings to generate AI responses.")
+            if not is_valid_api_key(api_key):
+                st.warning("Please configure a valid Gemini API Key in Settings to generate AI responses.")
             else:
                 incident_id = f"INC-2026-{random.randint(10000, 99999)}"
                 
@@ -427,32 +430,43 @@ def render_incident_hub(api_key):
                 response = model.generate_content(prompt)
                 
                 # Render beautifully formatted operations ticket
+                # Escape user and model inputs for safety
+                incident_id_s = sanitize_html(incident_id)
+                assigned_team_s = sanitize_html(assigned_team)
+                response_eta_s = sanitize_html(response_eta)
+                incident_type_s = sanitize_html(incident_type)
+                location_val_s = sanitize_html(location_val)
+                selected_stadium_s = sanitize_html(selected_stadium)
+                p_badge_s = sanitize_html(p_badge)
+                p_label_s = sanitize_html(p_label)
+                p_score_s = sanitize_html(p_score)
+
                 st.markdown(
                     f"""
-                    <div class="ticket-container">
+                    <div class="ticket-container" role="region" aria-label="Incident Dispatch Operations Ticket Log">
                         <div class="ticket-header">
                             <div>
                                 <div style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Operations Center Log</div>
-                                <div class="ticket-id">✓ {incident_id}</div>
+                                <div class="ticket-id">✓ {incident_id_s}</div>
                             </div>
-                            <span class="badge {p_badge}" style="font-size:0.9rem; padding:0.4rem 1rem;">{p_label} ({p_score}%)</span>
+                            <span class="badge {p_badge_s}" style="font-size:0.9rem; padding:0.4rem 1rem;">{p_label_s} ({p_score_s}%)</span>
                         </div>
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom:1.5rem;">
                             <div class="ticket-field">
                                 <div class="ticket-label">Assigned Tactical Team</div>
-                                <div class="ticket-value" style="color:#fbbf24;">{assigned_team}</div>
+                                <div class="ticket-value" style="color:#fbbf24;">{assigned_team_s}</div>
                             </div>
                             <div class="ticket-field">
                                 <div class="ticket-label">Target Response ETA</div>
-                                <div class="ticket-value">{response_eta}</div>
+                                <div class="ticket-value">{response_eta_s}</div>
                             </div>
                             <div class="ticket-field">
                                 <div class="ticket-label">Category</div>
-                                <div class="ticket-value">{incident_type}</div>
+                                <div class="ticket-value">{incident_type_s}</div>
                             </div>
                             <div class="ticket-field">
                                 <div class="ticket-label">Reported Location</div>
-                                <div class="ticket-value">{location_val} ({selected_stadium})</div>
+                                <div class="ticket-value">{location_val_s} ({selected_stadium_s})</div>
                             </div>
                         </div>
                         <div style="border-top: 1px dashed rgba(255,255,255,0.15); padding-top:1rem;">

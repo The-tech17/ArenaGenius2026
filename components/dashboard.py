@@ -42,7 +42,7 @@ def _sparkline(points, color="var(--primary)"):
 
 def _metric_card(title, value, trend, comparison, updated, status, spark_points, color):
     return f"""
-    <div class="kpi-card" style="--kpi-color:{color}">
+    <div class="kpi-card" style="--kpi-color:{color}" role="region" aria-label="{title} KPI Metric Dashboard Card">
         <div class="kpi-head">
             <span>{title}</span>
             <span class="kpi-status">{status}</span>
@@ -61,7 +61,7 @@ def _metric_card(title, value, trend, comparison, updated, status, spark_points,
 def _widget(title, eyebrow, body_html, footer=""):
     footer_html = f"<div class='widget-footer'>{footer}</div>" if footer else ""
     return f"""
-    <section class="ops-widget">
+    <section class="ops-widget" aria-label="{title} Stadium Operations Widget">
         <div class="widget-title-row">
             <div>
                 <div class="widget-eyebrow">{eyebrow}</div>
@@ -78,7 +78,7 @@ def _widget(title, eyebrow, body_html, footer=""):
 def _render_mission_hero(active_incidents, medical_count, capacity_pct, last_updated, countdown):
     weather_f = round(st.session_state.weather_temp * 9 / 5 + 32)
     html = f"""
-    <section class="mission-hero">
+    <section class="mission-hero" aria-label="FIFA World Cup Match Telemetry Summary">
         <div class="mission-main">
             <div class="mission-kicker">FIFA WORLD CUP 2026</div>
             <h2>{MATCH_NAME}</h2>
@@ -130,7 +130,7 @@ def _render_mission_hero(active_incidents, medical_count, capacity_pct, last_upd
 def _render_live_strip(active_incidents, medical_count):
     security_active = max(3, active_incidents + 1)
     html = f"""
-    <div class="live-strip">
+    <div class="live-strip" role="region" aria-label="Real-time Telemetry Service Status Strip">
         <div>{_status_dot()} <strong>Telemetry</strong><span>Active</span></div>
         <div>{_status_dot('#38bdf8')} <strong>Medical</strong><span>{medical_count} Active</span></div>
         <div>{_status_dot('#f59e0b')} <strong>Security</strong><span>{security_active} Active</span></div>
@@ -312,7 +312,7 @@ def _render_ai_copilot():
         for action in ["Open Gate 8", "Dispatch Volunteers", "Notify Transport Lead"]
     )
     html = f"""
-    <section class="ai-copilot">
+    <section class="ai-copilot" aria-label="AI Operations Copilot Recommendation Command Center">
         <div class="ai-header">
             <div>
                 <div class="widget-eyebrow">AI Command Center</div>
@@ -350,7 +350,7 @@ def _render_activity_feed():
     st.markdown(
         clean_html(
             f"""
-            <section class="activity-feed">
+            <section class="activity-feed" aria-label="Live Operations Activity Feed Log">
                 <div class="widget-title-row">
                     <div>
                         <div class="widget-eyebrow">Live Stream</div>

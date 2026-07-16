@@ -1,21 +1,21 @@
 # 🏟️ ArenaGenius 2026: Smart Stadium & Tournament Operations Companion
 
-ArenaGenius 2026 is a **Generative AI-powered stadium operations platform** built for the **FIFA World Cup 2026**. Designed with **Python, Streamlit, and the Google GenAI SDK**, it enhances fan experiences, streamlines volunteer workflows, and supports venue logistics teams with intelligent, context-aware assistance.
-
-The platform delivers multilingual guidance, structured incident management, and real-time crowd communication to help stadium operations remain efficient, safe, and responsive during large-scale sporting events.
+ArenaGenius 2026 is a state-of-the-art **stadium operations** and **real-time decision support** portal built to handle the unique logistical and operational demands of the **FIFA World Cup 2026**. Powering MetLife Stadium, SoFi Stadium, and Estadio Azteca, ArenaGenius 2026 integrates the **Google GenAI SDK (Gemini)** with real-time stadium telemetry and volunteer data streams to ensure match-day coordination is seamless, safe, and robust.
 
 ---
 
-# 🌍 Problem Statement
+# 🌍 FIFA World Cup 2026 Problem Statement & Goals
 
-Managing millions of spectators across multiple venues requires rapid coordination, multilingual communication, and efficient crowd management. Traditional systems often struggle with:
+Hosting the expanded 48-team tournament requires managing millions of international spectators across diverse locations. ArenaGenius 2026 directly solves key operational bottlenecks:
 
-* Language barriers for international fans
-* Inconsistent emergency reporting by volunteers
-* Delayed crowd movement decisions
-* Limited real-time operational assistance
+### 🌐 Multilingual Assistance & Fan Translation
+International fans face complex stadium environments and language barriers. ArenaGenius 2026 offers instant **multilingual assistance** (supporting English, Spanish, French, German, Portuguese, and Japanese). By integrating browser-native Speech-to-Text and Text-to-Speech translation, fans can speak their query and hear real-time AI guidance about nearby services, navigation routes, and venue policies in their native language.
 
-ArenaGenius 2026 addresses these challenges through AI-powered decision support and contextual guidance.
+### 🚇 Logistics Safety & Crowd Egress Decision-Support
+Post-match stadium evacuation (egress) is a critical crowd-safety hazard. The system integrates real-time telemetry inputs (crowd density indexes, active sensor loads, and gate throughputs) into a risk prioritization engine. This **real-time decision support** logic dynamically updates the optimal emergency route recommendation and generates structured Public Service Announcements (PSAs) to proactively optimize crowd flow, minimize bottlenecks, and improve egress logistics safety.
+
+### 🛡️ Standardized Incident Command Protocols
+When incidents occur on-site, volunteers need standard procedures. ArenaGenius 2026 calculates a situational priority risk score (0-100%) and generates structured AI dispatch checklists and standard operating procedures (SOPs) based on incident category and match timeline, enabling volunteers to coordinate rapidly with security and medical teams.
 
 ---
 
@@ -25,9 +25,9 @@ ArenaGenius 2026 addresses these challenges through AI-powered decision support 
 
 ### Target Users
 
-* 🌎 International Fans
-* 🦺 Stadium Volunteers
-* 🏟️ Venue Logistics Managers
+* 🌎 International Fans (Receiving personalized multilingual assistance)
+* 🦺 Stadium Volunteers (Accessing real-time decision support protocols)
+* 🏟️ Venue Logistics Managers (Optimizing crowd egress and emergency responses)
 
 ### Key Focus Areas
 
@@ -179,6 +179,15 @@ Run the application:
 
 ```bash
 streamlit run app.py
+```
+
+---
+
+## 🧪 Testing
+
+To run the unit tests for this project, run:
+```bash
+pytest tests/
 ```
 
 ---

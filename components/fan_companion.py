@@ -2,6 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import streamlit.components.v1 as components
 from utils.data_simulator import get_stadium_details, get_cached_faqs
+from utils.security import is_valid_api_key, sanitize_html, sanitize_js_string
 
 def get_language_code(lang_name):
     """
@@ -117,7 +118,7 @@ def render_tts_button(text_to_speak, lang_code):
     Renders a button that utilizes browser SpeechSynthesis to read responses aloud.
     """
     # Clean response text to prevent JavaScript syntax issues
-    cleaned_text = text_to_speak.replace('"', '\\"').replace('\n', ' ')
+    cleaned_text = sanitize_js_string(text_to_speak)
     
     tts_html = f"""
     <!DOCTYPE html>
@@ -226,13 +227,13 @@ def render_fan_companion(api_key):
             with c_voice:
                 render_stt_button(lang_code)
                 if voice_query:
-                    st.success(f"🎙️ Recorded Voice: \"{voice_query}\"")
+                    st.success(f"🎙️ Recorded Voice: \"{sanitize_html(voice_query)}\"")
             with c_submit:
                 get_guidance = st.button("Generate Guided Recommendation")
                 
         if get_guidance and user_query:
-            if not api_key:
-                st.warning("Please configure your Gemini API Key in Settings to get AI guidance.")
+            if not is_valid_api_key(api_key):
+                st.warning("Please configure a valid Gemini API Key in Settings to get AI guidance.")
             else:
                 with st.spinner("Accessing stadium blueprint mapping..."):
                     # Prompt structure to instruct the model to respond in the selected language and keep the tone polite and helpful.
@@ -274,9 +275,9 @@ def render_fan_companion(api_key):
                 st.write(prompt)
             st.session_state.chat_history.append({"role": "user", "content": prompt})
             
-            if not api_key:
+            if not is_valid_api_key(api_key):
                 with st.chat_message("assistant"):
-                    st.write("Please set your Gemini API Key in settings.")
+                    st.write("Please set a valid Gemini API Key in settings.")
             else:
                 with st.spinner("Formulating response..."):
                     # Simple chat instruction

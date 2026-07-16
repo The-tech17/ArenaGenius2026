@@ -11,6 +11,8 @@ from utils.data_simulator import initialize_simulation_state
 from utils.theme import get_theme_css, render_header
 
 
+from utils.security import is_valid_api_key
+
 st.set_page_config(
     page_title="ArenaGenius 2026 - Smart Stadium Platform",
     page_icon="AG",
@@ -67,10 +69,10 @@ if "api_key" not in st.session_state:
 
 st.markdown(get_theme_css(st.session_state.theme_pref), unsafe_allow_html=True)
 
-if st.session_state.api_key:
+if is_valid_api_key(st.session_state.api_key):
     genai.configure(api_key=st.session_state.api_key)
 else:
-    st.sidebar.warning("Gemini API Key required for full decision support.")
+    st.sidebar.warning("Valid Gemini API Key required for full decision support.")
 
 is_home = page == "Dashboard"
 render_header(is_compact=not is_home)
@@ -100,8 +102,14 @@ elif page == "Portal Settings":
             help="Allows calculations and automated incident checklists.",
         )
         if api_val != st.session_state.api_key:
-            st.session_state.api_key = api_val
-            st.rerun()
+            if not api_val:
+                st.session_state.api_key = ""
+                st.rerun()
+            elif is_valid_api_key(api_val):
+                st.session_state.api_key = api_val
+                st.rerun()
+            else:
+                st.error("Invalid API key format. Key must start with 'AIzaSy' and be at least 30 characters.")
 
     with st.container(border=True):
         st.markdown("### UI Preferences")
