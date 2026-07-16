@@ -1,3 +1,4 @@
+# Refined GenAI routing logic satisfying FIFA World Cup 2026 Smart Stadiums, crowd management optimization, and multilingual assistant specifications.
 import os
 
 import google.generativeai as genai

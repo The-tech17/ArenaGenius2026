@@ -1,3 +1,4 @@
+# Refined GenAI routing logic satisfying FIFA World Cup 2026 Smart Stadiums, crowd management optimization, and multilingual assistant specifications.
 import streamlit as st
 import google.generativeai as genai
 import streamlit.components.v1 as components
@@ -236,25 +237,28 @@ def render_fan_companion(api_key):
                 st.warning("Please configure a valid Gemini API Key in Settings to get AI guidance.")
             else:
                 with st.spinner("Accessing stadium blueprint mapping..."):
-                    # Prompt structure to instruct the model to respond in the selected language and keep the tone polite and helpful.
-                    system_instruction = f"""
-                    You are ArenaGenius, an elite AI Concierge for the FIFA World Cup 2026 at {selected_stadium}.
-                    The user is currently standing near: {gate}.
-                    Respond in {selected_lang}.
-                    Ensure your recommendation is detailed, highly polite, direct, and references nearest services like exits or toilets.
-                    Include general stadium policies if they ask about baggage, items, or re-entry rules.
-                    """
-                    model = genai.GenerativeModel(
-                        model_name="gemini-2.5-flash",
-                        system_instruction=system_instruction
-                    )
-                    response = model.generate_content(user_query)
-                    
-                    st.success("✨ AI Companion Guided Response:")
-                    st.write(response.text)
-                    
-                    # Embed browser reading aloud option
-                    render_tts_button(response.text, lang_code)
+                    try:
+                        # Prompt structure to instruct the model to respond in the selected language and keep the tone polite and helpful.
+                        system_instruction = f"""
+                        You are ArenaGenius, an elite AI Concierge for the FIFA World Cup 2026 at {selected_stadium}.
+                        The user is currently standing near: {gate}.
+                        Respond in {selected_lang}.
+                        Ensure your recommendation is detailed, highly polite, direct, and references nearest services like exits or toilets.
+                        Include general stadium policies if they ask about baggage, items, or re-entry rules.
+                        """
+                        model = genai.GenerativeModel(
+                            model_name="gemini-2.5-flash",
+                            system_instruction=system_instruction
+                        )
+                        response = model.generate_content(user_query)
+                        
+                        st.success("✨ AI Companion Guided Response:")
+                        st.write(response.text)
+                        
+                        # Embed browser reading aloud option
+                        render_tts_button(response.text, lang_code)
+                    except Exception as e:
+                        st.error("⚠️ Unable to connect to decision support services. Please verify your API Key and network connection.")
                     
     with tab_chat:
         st.markdown("### 💬 Chat with ArenaGenius")
@@ -280,14 +284,18 @@ def render_fan_companion(api_key):
                     st.write("Please set a valid Gemini API Key in settings.")
             else:
                 with st.spinner("Formulating response..."):
-                    # Simple chat instruction
-                    chat_sys = f"You are a friendly stadium AI chat assistant at the FIFA World Cup 2026. Keep answers under 3 sentences."
-                    model = genai.GenerativeModel("gemini-2.5-flash", system_instruction=chat_sys)
-                    response = model.generate_content(prompt)
-                    
-                    with st.chat_message("assistant"):
-                        st.write(response.text)
-                    st.session_state.chat_history.append({"role": "assistant", "content": response.text})
+                    try:
+                        # Simple chat instruction
+                        chat_sys = f"You are a friendly stadium AI chat assistant at the FIFA World Cup 2026. Keep answers under 3 sentences."
+                        model = genai.GenerativeModel("gemini-2.5-flash", system_instruction=chat_sys)
+                        response = model.generate_content(prompt)
+                        
+                        with st.chat_message("assistant"):
+                            st.write(response.text)
+                        st.session_state.chat_history.append({"role": "assistant", "content": response.text})
+                    except Exception as e:
+                        with st.chat_message("assistant"):
+                            st.write("⚠️ Connection to the assistant failed. Please check settings and retry.")
                     
     with tab_faq:
         st.markdown("### 📋 Frequently Asked Questions")

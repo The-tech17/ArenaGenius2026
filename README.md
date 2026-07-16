@@ -87,6 +87,15 @@ This helps reduce congestion and improves post-match crowd dispersal.
 
 ArenaGenius goes beyond a traditional chatbot by using carefully designed system instructions and contextual prompting.
 
+### Approach & Logic
+
+Our AI integration addresses key challenge areas:
+* **Navigation**: Real-time concourse guidance and segment exit route optimizations mapped from static stadium details.
+* **Crowd Management**: Active queue estimations, risk score analysis, and density optimizations to ensure safe ingress and egress.
+* **Sustainability**: Transit metrics tracking (Meadowlands Rail Station, Insurgentes lines) to encourage energy-efficient public travel.
+* **Multilingual Assistance**: Speech recognition and read-aloud functionality providing immediate fan concierge services in 6 international languages.
+* **Real-time Decision Support**: Formulating emergency SOPs and volunteer checklists dynamically from live incident parameters without raw traceback exposure.
+
 ### Contextual Grounding
 
 The application constrains the AI using structured instructions that define:

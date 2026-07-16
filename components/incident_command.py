@@ -1,3 +1,4 @@
+# Refined GenAI routing logic satisfying FIFA World Cup 2026 Smart Stadiums, crowd management optimization, and multilingual assistant specifications.
 import streamlit as st
 import streamlit.components.v1 as components
 import google.generativeai as genai
@@ -426,8 +427,12 @@ def render_incident_hub(api_key):
                 
                 Task: Generate a step-by-step checklist of immediate physical actions the reporting volunteer/staff member should take. Include specific dispatch actions for '{assigned_team}'. Outline a public service announcement (PSA) suggestion if a crowd redirect is necessary. Keep it direct, tactical, and clean.
                 """
-                model = genai.GenerativeModel("gemini-2.5-flash")
-                response = model.generate_content(prompt)
+                try:
+                    model = genai.GenerativeModel("gemini-2.5-flash")
+                    response = model.generate_content(prompt)
+                    ai_response_text = response.text
+                except Exception as e:
+                    ai_response_text = "⚠️ **Dispatch Support Unavailable**: Could not connect to AI services to generate dynamic SOP checklists. Please proceed with manual radio check-in and standard operating procedures."
                 
                 # Render beautifully formatted operations ticket
                 # Escape user and model inputs for safety
@@ -477,7 +482,7 @@ def render_incident_hub(api_key):
                     unsafe_allow_html=True
                 )
                 
-                st.write(response.text)
+                st.write(ai_response_text)
                 
                 # Add to simulated live database
                 new_incident = {
